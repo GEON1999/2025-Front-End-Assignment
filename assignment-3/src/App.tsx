@@ -11,10 +11,15 @@ function App() {
   const [confirmedUsers, setConfirmedUsers] = useState<User[]>([]);
   const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
     defaultValues: {
       users: users,
     },
+    mode: "onChange",
   });
 
   const addUser = () => {
@@ -43,6 +48,7 @@ function App() {
               index={index}
               onDelete={() => deleteUser(index)}
               register={register}
+              errors={errors}
             />
           ))}
         </div>
@@ -50,7 +56,9 @@ function App() {
           <button type="button" onClick={addUser}>
             Add User
           </button>
-          <button type="submit">Confirm</button>
+          <button type="submit" disabled={!isValid}>
+            Confirm
+          </button>
         </div>
       </form>
       {isConfirmed && (
