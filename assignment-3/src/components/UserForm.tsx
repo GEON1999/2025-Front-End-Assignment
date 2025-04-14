@@ -5,9 +5,16 @@ interface UserFormProps {
   onDelete: () => void;
   register: UseFormRegister<any>;
   errors: any;
+  validateDuplicateName: (name: string) => boolean;
 }
 
-const UserForm = ({ index, onDelete, register, errors }: UserFormProps) => {
+const UserForm = ({
+  index,
+  onDelete,
+  register,
+  errors,
+  validateDuplicateName,
+}: UserFormProps) => {
   return (
     <div className="user-form">
       <div className="user-form-header">
@@ -25,11 +32,17 @@ const UserForm = ({ index, onDelete, register, errors }: UserFormProps) => {
             {...register(`users.${index}.name`, {
               required: true,
               minLength: 3,
+              validate: validateDuplicateName,
             })}
           />
-          {errors.users?.[index]?.name && (
+          {errors.users?.[index]?.name?.type === "minLength" && (
             <p className="error-message">
               Name must be at least 3 characters long.
+            </p>
+          )}
+          {errors.users?.[index]?.name?.type === "validate" && (
+            <p className="error-message">
+              This name is already used by another user.
             </p>
           )}
         </div>
